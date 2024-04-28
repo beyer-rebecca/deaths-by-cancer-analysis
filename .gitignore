@@ -1,0 +1,4 @@
+# .gitignore
+
+# Python bytecodes
+__pycache__/
