@@ -19,9 +19,9 @@ It contains data on the absolute number of deaths, classified by different cause
 I want to examine the broader context of cancer mortality in Germany, look at breast cancer specifically and then analyse the data to investigate age-related patterns and changes in breast cancer deaths over time. 
 
 -  **Cancer's Proportion of Mortality in Germany**: What percentage of all deaths in Germany in 2022 were due to cancer, and how does this compare to other leading causes of death? 
--  **Comparison of Cancer Types by Mortality**: Among the various types of cancer, which had the highest mortality rates in 2022, and how do these rates differ between men and women? A bar plot can compare the mortality counts for different cancers, with separate bars for men and women to reveal gender-specific trends.
--  **Age-Specific Breast Cancer Mortality in Women**: How does breast cancer mortality vary across different age groups in women in 2022? A bar plot or a series of line plots for each age group can demonstrate how age influences the risk of dying from breast cancer.
--  **Breast Cancer Mortality Trends in Women Over the Last 20 Years**: How have breast cancer mortality rates changed over the last 20 years among women? A line plot can show the trajectory of breast cancer mortality, providing insights into the effectiveness of treatment and early detection efforts.
+-  **Comparison of Cancer Types by Mortality**: Among the various types of cancer, which had the highest mortality rates in 2022, and how do these rates differ between men and women? 
+-  **Age-Specific Breast Cancer Mortality in Women**: How does breast cancer mortality vary across different age groups in women in 2022? 
+-  **Breast Cancer Mortality Trends in Women Over the Last 20 Years**: How have breast cancer mortality rates changed over the last 20 years among women? 
 -  **Average Age of Breast Cancer Mortality in Women**: What is the average age at which women succumb to breast cancer in 2022?
 
 ## Methodological Approach
