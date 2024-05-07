@@ -1,4 +1,4 @@
-"""Generates plots for visualizing mortality from cancer in germany"""
+"""Generates plots for visualizing mortality from cancer in germany, with a focus on breast cancer in female population"""
 
 import pandas as pd
 import numpy as np
@@ -122,7 +122,7 @@ def plot_cause_of_death_distribution():
         plt.figure(figsize=(18, 6))
         plt.pie(df, labels=df.index, autopct='%1.1f%%', startangle=140, colors=colors)
         plt.title('Proportion of Mortality by Cause in Germany in 2022')
-        plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        plt.axis('equal') 
         plt.show()
     
     df = _read_csv()
@@ -152,15 +152,10 @@ def plot_cancer_type_mortality_by_sex():
 
         female_reproductive_totals = df_cancer_mortality[df_cancer_mortality['Cause of Death'].isin(female_reproductive_cancers)]
         female_reproductive_totals = female_reproductive_totals.groupby('Sex')['Number of Deaths'].sum().reset_index()
-
-        # Hinzufügen der neuen Kategorie
         female_reproductive_totals['Cause of Death'] = 'Malignant neoplasms of female reproductive system'
+
         df_cancer_mortality = pd.concat([df_cancer_mortality, female_reproductive_totals]).reset_index(drop=True)
-
-        # Entfernen der alten spezifischen Kategorien
         df_cancer_mortality = df_cancer_mortality[~df_cancer_mortality['Cause of Death'].isin(female_reproductive_cancers)]
-
-        # Berechnung der prozentualen Anteile jeder Krebsart an den Gesamttodesfällen jeweils Frauen Männer
         df_cancer_mortality = df_cancer_mortality [df_cancer_mortality['Cause of Death'] != 'Malignant neoplasms']
         
         return df_cancer_mortality
@@ -207,7 +202,7 @@ def plot_cancer_type_mortality_by_sex():
 
 
 def plot_breast_cancer_mortality_trends():
-
+    """Creates a bar chart showing the number of deaths in the female population in Germany due to breast cancer in the period 2003-20022."""
     def preprocess_df(df):
         df = df[
             (df['Sex'] == 'Female') &
@@ -220,20 +215,15 @@ def plot_breast_cancer_mortality_trends():
         return df
     
     def plot(df):
-        # Create the line plot
         plt.figure(figsize=(10, 5))
         plt.plot(df['Year'], df['Number of Deaths'], marker='o', linestyle='-', color='tab:blue')
-
         plt.xticks(df['Year'], df['Year'], rotation=45)
-
         plt.ylim(bottom=0,top=22000)
 
-        # Add labels and title
         plt.title('Breast Cancer Mortality Trends in Women, 2003-2022')
         plt.xlabel('Year')
         plt.ylabel('Number of Deaths')
 
-        # Display the plot
         plt.show()
     
     df = _read_csv()
@@ -242,7 +232,7 @@ def plot_breast_cancer_mortality_trends():
 
 
 def plot_breast_cancer_mortality_by_age():
-
+    """Creates a line chart showing the number of deaths in the female population from breast cancer in Germany, depending on age."""
     def preprocess_df(df):
         df = df[
             (df['Year'] == 2022) &
@@ -253,7 +243,6 @@ def plot_breast_cancer_mortality_by_age():
         df.reset_index(drop=True)
         df = df.drop(['Cause of Death', 'Year', 'Sex'], axis=1)
 
-        # fill nans with zeros ! müssen später markiert werden als Nans
         df = df.fillna(value=0)
 
         return df
@@ -279,19 +268,16 @@ def plot_breast_cancer_mortality_by_age():
             '85 years and over': '>85'
         }
 
-        # Erstellen des Barplots
         plt.figure(figsize=(10, 5))
         sns.barplot(data=df, x='Age Group', y='Number of Deaths', color='tab:blue')
 
-        # Hinzufügen von Beschriftungen und Titel
         plt.title('Age-Specific Breast Cancer Mortality in Women from Year 2022')
         plt.xlabel('Age')
         plt.ylabel('Number of Deaths')
         plt.xticks(ticks=np.arange(len(ages)), labels=list(ages.values()), rotation=45)
         plt.legend(handles=[plt.Line2D([0], [0], color='w', label='* no data available')], loc='upper left')
 
-        # Anzeigen des Plots
-        plt.tight_layout()  # Passt das Layout an, um Überlappungen zu vermeiden
+        plt.tight_layout() 
         plt.show()
         
     df = _read_csv()
@@ -299,6 +285,7 @@ def plot_breast_cancer_mortality_by_age():
     plot(df)
 
 def print_breast_cancer_mortality_median_age():
+    """Calculates the average age at which women in Germany died of breast cancer in 2022 using the median and standard deviation."""
 
     def preprocess_df(df):
         df = df[
@@ -312,7 +299,6 @@ def print_breast_cancer_mortality_median_age():
         return df
     
     def calculate_median_age(df):
-        # Mittelwerte für Altersgruppen festlegen
         age_midpoints = {
             'under 1 year': 0.5,
             '1 to under 15 years': 7.5,
@@ -330,22 +316,21 @@ def print_breast_cancer_mortality_median_age():
             '70 to under 75 years': 72.5,
             '75 to under 80 years': 77.5,
             '80 to under 85 years': 82.5,
-            '85 years and over': 90   # Annahme für '85 und älter'
+            '85 years and over': 90   # Assumption for '85 and older'
         }
 
-        # Erstellung einer Liste von Alterswerten basierend auf der Anzahl der Todesfälle
         ages = []
         for age_group, midpoint in age_midpoints.items():
             if age_group in df['Age Group'].values:
                 deaths_in_group = df[df['Age Group'] == age_group]['Number of Deaths'].values[0]
                 ages.extend([midpoint] * deaths_in_group)
 
-        # Berechnung des Medians und Standartabweichung des Alters
         median_age = np.median(ages) 
         std = np.std(ages)
         print(f"The median age of death from breast cancer for women in 2022 is: {median_age:.2f} ± {std:.2f} ages")
     
     df = _read_csv()
+    preprocess_df(df)
     calculate_median_age(df)
 
 
