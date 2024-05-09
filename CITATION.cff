@@ -1,0 +1,25 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Plotting library for "Deaths: Germany, years, causes of
+  death, sex, age groups"
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file. 
+type: software
+authors:
+  - given-names: Rebecca
+    family-names: Beyer
+    email: re.beyer@gmx.de
+    affiliation: 'Student at University of Potsdam, Germany'
+repository-code: 'https://gitup.uni-potsdam.de/beyer8/rse_project1'
+repository: >-
+  https://www-genesis.destatis.de/genesis//online?operation=table&code=23211-0004&bypass=true&levelindex=1&levelid=1715088336238#abreadcrumb
+abstract: >-
+  The library helps to visualize data from a dataset on the
+  number of deaths in Germany and their causes. The program has a jupyter notebook 
+  that can be opened with an editor of your choice.
+license: MIT
+version: '1.0'
