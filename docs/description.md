@@ -27,10 +27,10 @@ I want to examine the broader context of cancer mortality in Germany, look at br
 ## Methodological Approach
 
 The following plotting techniques are used:
--  **Pie Plot for Cancer's Proportion of Mortality**:  A pie plot will be used to represent the 10 leading causes of death in Germany for 2022, showcasing each cause as a percentage of total mortality. 
--  **Bar Plot for Cancer Type Comparison**: A bar plot will display the mortality counts for various types of cancer in 2022, with different bars grouped by cancer type and differentiated by color for men and women. The x-axis will label each cancer type, with a color distinction for gender, and the y-axis will show the percentage each cancer type constitutes of the total cancer deaths.
+-  **Pie Plot for Cancer's Proportion of Mortality**:  A pie plot will be used to represent the leading causes of death in Germany for 2022, showcasing each cause as a percentage of total mortality. 
+-  **Bar Plot for Cancer Type Comparison**: A bar plot will display the mortality counts for various types of cancer in 2022, with different bars grouped by cancer type and differentiated by color for men and women. The x-axis will label each cancer type, with a color distinction for gender, and the y-axis will show the absolute number of deaths due to each cancer type.
 -  **Line Plot for Age-Specific Breast Cancer Mortality**: A line plot will be used to display breast cancer mortality across different age groups, segmented into 5-year groups. The x-axis will categorize the age groups, while the y-axis will enumerate the absolute number of breast cancer-related deaths.
--  **Line Plot for Breast Cancer Mortality Trends in Women Over the Last 20 Years**: A line plot will be used to show the trend in breast cancer mortality rates among women over the past 20 years. The x-axis will include years from 2002 to 2022, and the y-axis will record the absolute number of women who have died from breast cancer each year. 
+-  **Line Plot for Breast Cancer Mortality Trends in Women Over the Last 20 Years**: A line plot will be used to show the trend in breast cancer mortality rates among women over the past 20 years. The x-axis will include years from 2003 to 2022, and the y-axis will record the absolute number of women who have died from breast cancer each year. 
 -  **Average Age of Breast Cancer Mortality**: To calculate the average age at which women die from breast cancer in 2022, the mean age will be computed along with the standard deviation to provide a measure of variability around the mean.
 
 For visualizations, calculations, and data preprocessing in Python, the matplotlib, seaborn, pandas, and numpy packages will be used.
