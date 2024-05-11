@@ -51,7 +51,8 @@ CANCER_TYPES = [
 ]
 
 
-def _read_csv():
+
+def _read_and_preprocess_csv():
     """Read and preprocess the dataset."""
     df = pd.read_csv(
         '../data/death_counts_DE_causes_2003-2022_gender_age.csv',
@@ -63,13 +64,12 @@ def _read_csv():
         skipfooter=4
         )
     df.columns = [' '.join(col).strip() for col in df.columns.values]
-    df = _preprocess_data(df)
-    return df
+    return _preprocess_data(df)
 
 
 def _preprocess_data(df):
     """Convert data to long format and clean it."""
-    long_format_df = df.melt(
+    df = df.melt(
         id_vars=[
             'Unnamed: 0_level_0 Unnamed: 0_level_1 Unnamed: 0_level_2 Unnamed: 0_level_3',
             'Unnamed: 1_level_0 Unnamed: 1_level_1 Unnamed: 1_level_2 Unnamed: 1_level_3'
@@ -78,19 +78,18 @@ def _preprocess_data(df):
         value_name='Number of Deaths'
     )
 
-    long_format_df['Sex'] = long_format_df['Demographics'].apply(lambda x: x.split()[1])
-    long_format_df['Age Group'] = long_format_df['Demographics'].apply(
+    df['Sex'] = df['Demographics'].apply(lambda x: x.split()[1])
+    df['Age Group'] = df['Demographics'].apply(
         lambda x: ' '.join(x.split()[4:])
     )
-    long_format_df = long_format_df.drop('Demographics', axis=1)
-    long_format_df.columns = ['Year', 'Cause of Death', 'Number of Deaths', 'Sex', 'Age Group']
-    long_format_df['Age Group'] = long_format_df['Age Group'].str.replace('groups ', '')
-    long_format_df.tail(20)
-    long_format_df = long_format_df[long_format_df['Age Group'] != 'age unknown']
-    long_format_df['Number of Deaths'] = pd.to_numeric(
-        long_format_df['Number of Deaths'], errors='coerce'
+    df = df.drop('Demographics', axis=1)
+    df.columns = ['Year', 'Cause of Death', 'Number of Deaths', 'Sex', 'Age Group']
+    df['Age Group'] = df['Age Group'].str.replace('groups ', '')
+    df = df[df['Age Group'] != 'age unknown']
+    df['Number of Deaths'] = pd.to_numeric(
+        df['Number of Deaths'], errors='coerce'
     ).astype('Int64')
-    return long_format_df
+    return df
 
 
 def plot_cause_of_death_distribution():
@@ -128,13 +127,14 @@ def plot_cause_of_death_distribution():
         plt.axis('equal')
         plt.show()
 
-    df = _read_csv()
+    df = _read_and_preprocess_csv()
     df = preprocess_df(df)
     plot(df)
 
 
 def plot_cancer_type_mortality_by_sex():
-    """Create a bar plot showing the number of deaths of female and male population in Germany, depending on type of cancer"""
+    """Creates a bar plot showing the number of deaths of female and male population
+    in Germany, depending on type of cancer"""
 
     def preprocess_df(df):
         df = df[
@@ -142,9 +142,8 @@ def plot_cancer_type_mortality_by_sex():
             (df['Cause of Death'].isin(CANCER_TYPES))
         ]
 
-        df_cancer_mortality = df.groupby(['Cause of Death', 'Sex'])['Number of Deaths'].sum().reset_index()
-        df_cancer_mortality = df_cancer_mortality.rename({
-            'Melanoma and other malignant neoplasms of skin': 'Malignant neoplasms of skin'
+        df = df.groupby(['Cause of Death', 'Sex'])['Number of Deaths'].sum().reset_index()
+        df = df.rename({            'Melanoma and other malignant neoplasms of skin': 'Malignant neoplasms of skin'
         })
 
         female_reproductive_cancers = [
@@ -153,15 +152,15 @@ def plot_cancer_type_mortality_by_sex():
             'Malignant neoplasms of ovary'
         ]
 
-        female_reproductive_totals = df_cancer_mortality[df_cancer_mortality['Cause of Death'].isin(female_reproductive_cancers)]
+        female_reproductive_totals = df[df['Cause of Death'].isin(female_reproductive_cancers)]
         female_reproductive_totals = female_reproductive_totals.groupby('Sex')['Number of Deaths'].sum().reset_index()
         female_reproductive_totals['Cause of Death'] = 'Malignant neoplasms of female reproductive system'
 
-        df_cancer_mortality = pd.concat([df_cancer_mortality, female_reproductive_totals]).reset_index(drop=True)
-        df_cancer_mortality = df_cancer_mortality[~df_cancer_mortality['Cause of Death'].isin(female_reproductive_cancers)]
-        df_cancer_mortality = df_cancer_mortality[df_cancer_mortality['Cause of Death'] != 'Malignant neoplasms']
+        df = pd.concat([df, female_reproductive_totals]).reset_index(drop=True)
+        df = df[~df['Cause of Death'].isin(female_reproductive_cancers)]
+        df = df[df['Cause of Death'] != 'Malignant neoplasms']
 
-        return df_cancer_mortality
+        return df
 
     def plot(df):
         cancer_types_aliases = {
@@ -199,7 +198,7 @@ def plot_cancer_type_mortality_by_sex():
         plt.tight_layout()
         plt.show()
 
-    df = _read_csv()
+    df = _read_and_preprocess_csv()
     df = preprocess_df(df)
     plot(df)
 
@@ -230,7 +229,7 @@ def plot_breast_cancer_mortality_trends():
 
         plt.show()
 
-    df = _read_csv()
+    df = _read_and_preprocess_csv()
     df = preprocess_df(df)
     plot(df)
 
@@ -285,7 +284,7 @@ def plot_breast_cancer_mortality_by_age():
         plt.tight_layout()
         plt.show()
 
-    df = _read_csv()
+    df = _read_and_preprocess_csv()
     df = preprocess_df(df)
     plot(df)
 
@@ -335,12 +334,16 @@ def print_breast_cancer_mortality_median_age():
 
         median_age = np.median(ages)
         std = np.std(ages)
-        print(f"The median age of death from breast cancer for women in 2022 is: {median_age:.2f} ± {std:.2f} ages")
+        print(f"The median age of death from breast cancer for women in 2022 is: {median_age:.2f} ± {std:.2f} years")
 
-    df = _read_csv()
+    df = _read_and_preprocess_csv()
     preprocess_df(df)
     calculate_median_age(df)
 
 
 if __name__ == "__main__":
+    plot_cause_of_death_distribution()
+    plot_cancer_type_mortality_by_sex()
+    plot_breast_cancer_mortality_trends()
+    plot_breast_cancer_mortality_by_age()
     print_breast_cancer_mortality_median_age()
