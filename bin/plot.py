@@ -97,7 +97,8 @@ def _read_and_preprocess_csv():
 
 
 def plot_cause_of_death_distribution():
-    """Creates a pie chart illustrating the percentage distribution of mortality causes in Germany"""
+    """Creates a pie chart illustrating the percentage
+    distribution of mortality causes in Germany"""
 
     def preprocess_df(df):
         df = df[
@@ -137,8 +138,8 @@ def plot_cause_of_death_distribution():
 
 
 def plot_cancer_type_mortality_by_sex():
-    """Creates a bar plot showing the number of deaths of female and male population
-    in Germany, depending on type of cancer"""
+    """Creates a bar plot showing the number of deaths
+    of female and male population in Germany, depending on type of cancer"""
 
     def preprocess_df(df):
         df = df[
@@ -147,8 +148,7 @@ def plot_cancer_type_mortality_by_sex():
         ]
 
         df = df.groupby(['Cause of Death', 'Sex'])['Number of Deaths'].sum().reset_index()
-        df = df.rename({            'Melanoma and other malignant neoplasms of skin': 'Malignant neoplasms of skin'
-        })
+        df = df.rename({'Melanoma and other malignant neoplasms of skin': 'Malignant neoplasms of skin'})
 
         female_reproductive_cancers = [
             'Malignant neoplasms of cervix uteri',
@@ -208,7 +208,7 @@ def plot_cancer_type_mortality_by_sex():
 
 
 def plot_breast_cancer_mortality_trends():
-    """Creates a bar chart showing the number of deaths in the female population
+    """Creates a bar chart showing the number of deaths in female population
     in Germany due to breast cancer in the period 2003-20022."""
     def preprocess_df(df):
         df = df[
@@ -239,8 +239,8 @@ def plot_breast_cancer_mortality_trends():
 
 
 def plot_breast_cancer_mortality_by_age():
-    """Creates a line chart showing the number of deaths in the female population
-     from breast cancer in Germany, depending on age."""
+    """Creates a line chart showing the number of deaths in the female
+    population from breast cancer in Germany, depending on age."""
     def preprocess_df(df):
         df = df[
             (df['Year'] == 2022) &
