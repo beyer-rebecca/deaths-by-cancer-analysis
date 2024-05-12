@@ -51,44 +51,48 @@ CANCER_TYPES = [
 ]
 
 
-
 def _read_and_preprocess_csv():
-    """Read and preprocess the dataset."""
-    df = pd.read_csv(
-        '../data/death_counts_DE_causes_2003-2022_gender_age.csv',
-        header=[0, 1, 2, 3],
-        encoding='ANSI',
-        engine='python',
-        delimiter=';',
-        skiprows=5, 
-        skipfooter=4
+    """Reads the dataset, converts data to long format and cleans it."""
+
+    def _read_csv():
+        df = pd.read_csv(
+            '../data/death_counts_DE_causes_2003-2022_gender_age.csv',
+            header=[0, 1, 2, 3],
+            encoding='ANSI',
+            engine='python',
+            delimiter=';',
+            skiprows=5,
+            skipfooter=4
+            )
+        df.columns = [' '.join(col).strip() for col in df.columns.values]
+        return df
+
+    def _preprocess_data(df):
+        """Converts data to long format and cleans it."""
+        df = df.melt(
+            id_vars=[
+                'Unnamed: 0_level_0 Unnamed: 0_level_1 Unnamed: 0_level_2 Unnamed: 0_level_3',
+                'Unnamed: 1_level_0 Unnamed: 1_level_1 Unnamed: 1_level_2 Unnamed: 1_level_3'
+            ],
+            var_name='Demographics',
+            value_name='Number of Deaths'
         )
-    df.columns = [' '.join(col).strip() for col in df.columns.values]
-    return _preprocess_data(df)
 
+        df['Sex'] = df['Demographics'].apply(lambda x: x.split()[1])
+        df['Age Group'] = df['Demographics'].apply(
+            lambda x: ' '.join(x.split()[4:])
+        )
+        df = df.drop('Demographics', axis=1)
+        df.columns = ['Year', 'Cause of Death', 'Number of Deaths', 'Sex', 'Age Group']
+        df['Age Group'] = df['Age Group'].str.replace('groups ', '')
+        df = df[df['Age Group'] != 'age unknown']
+        df['Number of Deaths'] = pd.to_numeric(
+            df['Number of Deaths'], errors='coerce'
+        ).astype('Int64')
+        return df
 
-def _preprocess_data(df):
-    """Convert data to long format and clean it."""
-    df = df.melt(
-        id_vars=[
-            'Unnamed: 0_level_0 Unnamed: 0_level_1 Unnamed: 0_level_2 Unnamed: 0_level_3',
-            'Unnamed: 1_level_0 Unnamed: 1_level_1 Unnamed: 1_level_2 Unnamed: 1_level_3'
-        ],
-        var_name='Demographics',
-        value_name='Number of Deaths'
-    )
-
-    df['Sex'] = df['Demographics'].apply(lambda x: x.split()[1])
-    df['Age Group'] = df['Demographics'].apply(
-        lambda x: ' '.join(x.split()[4:])
-    )
-    df = df.drop('Demographics', axis=1)
-    df.columns = ['Year', 'Cause of Death', 'Number of Deaths', 'Sex', 'Age Group']
-    df['Age Group'] = df['Age Group'].str.replace('groups ', '')
-    df = df[df['Age Group'] != 'age unknown']
-    df['Number of Deaths'] = pd.to_numeric(
-        df['Number of Deaths'], errors='coerce'
-    ).astype('Int64')
+    df = _read_csv()
+    df = _preprocess_data(df)
     return df
 
 
